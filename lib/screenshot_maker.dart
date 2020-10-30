@@ -33,7 +33,9 @@ class ScreenshotMaker extends StatelessWidget {
 
       final pngBytes = byteData.buffer.asUint8List();
       outputFile.writeAsBytesSync(pngBytes);
-      completer.complete();
+      if (completer != null && !completer.isCompleted) {
+        completer.complete();
+      }
     });
 
     // Thanks to this FittedBox, you can use Debug Paint on a simulator.
@@ -58,14 +60,14 @@ class ScreenshotMaker extends StatelessWidget {
 }
 
 class Simulated extends StatelessWidget {
-  const Simulated(
-      {@required this.deviceFrameImage,
-      @required this.innerScreenSize,
-      @required this.innerScreenOffset,
-      @required this.child,
-      Size originalScreenSize})
-      : originalScreenSize = originalScreenSize ?? innerScreenSize;
-  final File deviceFrameImage;
+  const Simulated({
+    @required this.deviceFrameImage,
+    @required this.innerScreenSize,
+    @required this.innerScreenOffset,
+    @required this.child,
+    Size originalScreenSize,
+  }) : originalScreenSize = originalScreenSize ?? innerScreenSize;
+  final Image deviceFrameImage;
   final Size innerScreenSize;
   final Size innerScreenOffset;
   final Size originalScreenSize;
@@ -73,6 +75,7 @@ class Simulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final devicePixelRatio = WidgetsBinding.instance.window.devicePixelRatio;
     return Stack(children: [
       Padding(
         padding: EdgeInsets.only(
@@ -84,18 +87,18 @@ class Simulated extends StatelessWidget {
           height: innerScreenSize.height,
           child: FittedBox(
             child: ConstrainedBox(
-              child: child,
               constraints: BoxConstraints(
-                minWidth: originalScreenSize.width,
-                maxWidth: originalScreenSize.width,
-                minHeight: originalScreenSize.height,
-                maxHeight: originalScreenSize.height,
+                minWidth: originalScreenSize.width / devicePixelRatio,
+                maxWidth: originalScreenSize.width / devicePixelRatio,
+                minHeight: originalScreenSize.height / devicePixelRatio,
+                maxHeight: originalScreenSize.height / devicePixelRatio,
               ),
+              child: child,
             ),
           ),
         ),
       ),
-      Image.file(deviceFrameImage),
+      deviceFrameImage,
     ]);
   }
 }
