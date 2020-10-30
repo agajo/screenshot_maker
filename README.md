@@ -4,6 +4,9 @@ A package for generating images laid out using Flutter. This package allows you 
 
 This package provides two widgets: ScreenshotMaker and Simulated.
 
+![out2のコピー](https://user-images.githubusercontent.com/12369062/97675378-8e6e9c00-1ad2-11eb-8504-fcbb378326c1.png)
+
+
 ## Usage
 
 ### ScreenshotMaker
