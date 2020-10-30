@@ -76,29 +76,32 @@ class Simulated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final devicePixelRatio = WidgetsBinding.instance.window.devicePixelRatio;
-    return Stack(children: [
-      Padding(
-        padding: EdgeInsets.only(
-          left: innerScreenOffset.width,
-          top: innerScreenOffset.height,
-        ),
-        child: SizedBox(
-          width: innerScreenSize.width,
-          height: innerScreenSize.height,
-          child: FittedBox(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: originalScreenSize.width / devicePixelRatio,
-                maxWidth: originalScreenSize.width / devicePixelRatio,
-                minHeight: originalScreenSize.height / devicePixelRatio,
-                maxHeight: originalScreenSize.height / devicePixelRatio,
+    return FittedBox(
+      child: Stack(children: [
+        Padding(
+          padding: EdgeInsets.only(
+            left: innerScreenOffset.width,
+            top: innerScreenOffset.height,
+          ),
+          child: SizedBox(
+            width: innerScreenSize.width,
+            height: innerScreenSize.height,
+            child: FittedBox(
+              alignment: Alignment.topLeft,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: originalScreenSize.width / devicePixelRatio,
+                  maxWidth: originalScreenSize.width / devicePixelRatio,
+                  minHeight: originalScreenSize.height / devicePixelRatio,
+                  maxHeight: originalScreenSize.height / devicePixelRatio,
+                ),
+                child: child,
               ),
-              child: child,
             ),
           ),
         ),
-      ),
-      deviceFrameImage,
-    ]);
+        deviceFrameImage,
+      ]),
+    );
   }
 }

@@ -95,15 +95,13 @@ class _MakeScreenshotsContinuouslyState
                 ),
                 Expanded(
                   flex: 4,
-                  child: FittedBox(
-                    child: Simulated(
-                      innerScreenSize: Size(1658, 3588),
-                      innerScreenOffset: Size(116, 103),
-                      originalScreenSize: Size(1242, 2688),
-                      deviceFrameImage:
-                          Image.asset('assets/example_device_frame.png'),
-                      child: MyAwesomeApp(),
-                    ),
+                  child: Simulated(
+                    innerScreenSize: Size(1658, 3588),
+                    innerScreenOffset: Size(116, 103),
+                    originalScreenSize: Size(1242, 2688),
+                    deviceFrameImage:
+                        Image.asset('assets/example_device_frame.png'),
+                    child: MyAwesomeApp(),
                   ),
                 ),
               ],
