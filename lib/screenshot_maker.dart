@@ -7,16 +7,51 @@ import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
+/// Widget for generating images.
+/// When you pass a widget as a child and let it work in the simulator, it generates an image.
+///
+/// ```dart
+/// import 'dart:io';
+/// import 'package:flutter/material.dart';
+/// import 'package:screenshot_maker/screenshot_maker.dart';
+///
+/// void main() {
+///   runApp(
+///     ScreenshotMaker(
+///       // write your absolute path.
+///       outputFile: File('/Users/your_name/Desktop/simple.png'),
+///       size: Size(500, 1000),
+///       child: MaterialApp(
+///         home: Scaffold(
+///           appBar: AppBar(),
+///           body: Text('text'),
+///         ),
+///       ),
+///     ),
+///   );
+/// }
+/// ```
 class ScreenshotMaker extends StatelessWidget {
   const ScreenshotMaker(
       {@required this.size,
       @required this.outputFile,
       @required this.child,
       this.completer});
+
+  /// Size of the image to be generated.
   final Size size;
+
+  /// Widget to be drawn as an image.
   final Widget child;
+
+  /// File to be output.
   final File outputFile;
+
+  /// Completer that is completed when the image generation is finished.
+  /// By responding to this, the next image generation process can be executed.
   final Completer<void> completer;
+
+  /// GlobalKey to access the RenderRepaintBoundary to retrieve the image.
   static GlobalKey renderRepaintBoundaryKey = GlobalKey();
 
   @override
@@ -38,7 +73,7 @@ class ScreenshotMaker extends StatelessWidget {
       }
     });
 
-    // Thanks to this FittedBox, you can use Debug Paint on a simulator.
+    // Thanks to this FittedBox, you can use Flutter Inspector and Debug Paint on a simulator.
     return FittedBox(
       child: ConstrainedBox(
         constraints: BoxConstraints(
@@ -59,6 +94,35 @@ class ScreenshotMaker extends StatelessWidget {
   }
 }
 
+/// Widget for fitting your app into a device frame image.
+///
+/// ```dart
+/// import 'package:flutter/material.dart';
+/// import 'package:screenshot_maker/screenshot_maker.dart';
+///
+/// void main() {
+///   runApp(
+///     Directionality(
+///       textDirection: TextDirection.ltr,
+///       child: Simulated(
+///         innerScreenSize: Size(1658, 3588),
+///         innerScreenOffset: Size(116, 103),
+///         originalScreenSize: Size(1242, 2688),
+///         deviceFrameImage: Image.asset('assets/example_device_frame.png'),
+///         child: MyAwesomeApp(),
+///       ),
+///     ),
+///   );
+/// }
+///
+/// class MyAwesomeApp extends StatelessWidget {
+///   const MyAwesomeApp();
+///   @override
+///   Widget build(BuildContext context) {
+///     return MaterialApp(home: Scaffold(appBar: AppBar(), body: Text('foobar')));
+///   }
+/// }
+/// ```
 class Simulated extends StatelessWidget {
   const Simulated({
     @required this.deviceFrameImage,
@@ -67,10 +131,20 @@ class Simulated extends StatelessWidget {
     @required this.child,
     Size originalScreenSize,
   }) : originalScreenSize = originalScreenSize ?? innerScreenSize;
+
+  /// Image Widget to display the image of the device you want to combine.
   final Image deviceFrameImage;
+
+  /// The size of the screen in the device image.
   final Size innerScreenSize;
+
+  /// Offset from the top left corner to the screen in the device image.
   final Size innerScreenOffset;
+
+  /// The number of original physical pixels of the device being used as the device image.
   final Size originalScreenSize;
+
+  /// Your app for combining with the device image.
   final Widget child;
 
   @override
