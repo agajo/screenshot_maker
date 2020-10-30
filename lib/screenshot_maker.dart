@@ -1,3 +1,4 @@
+/// A package for generating images laid out using Flutter.
 library screenshot_maker;
 
 import 'dart:async';
@@ -7,7 +8,7 @@ import 'dart:ui';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
-/// Widget for generating images.
+/// A widget for generating images.
 /// When you pass a widget as a child and let it work in the simulator, it generates an image.
 ///
 /// ```dart
@@ -32,26 +33,28 @@ import 'package:flutter/widgets.dart';
 /// }
 /// ```
 class ScreenshotMaker extends StatelessWidget {
-  const ScreenshotMaker(
-      {@required this.size,
-      @required this.outputFile,
-      @required this.child,
-      this.completer});
+  const ScreenshotMaker({
+    @required this.size,
+    @required this.outputFile,
+    @required this.child,
+    this.completer,
+    Key key,
+  }) : super(key: key);
 
   /// Size of the image to be generated.
   final Size size;
 
-  /// Widget to be drawn as an image.
+  /// The widget to be drawn as an image.
   final Widget child;
 
-  /// File to be output.
+  /// The file to be output.
   final File outputFile;
 
-  /// Completer that is completed when the image generation is finished.
+  /// A completer that is completed when the image generation is finished.
   /// By responding to this, the next image generation process can be executed.
   final Completer<void> completer;
 
-  /// GlobalKey to access the RenderRepaintBoundary to retrieve the image.
+  /// A GlobalKey to access the RenderRepaintBoundary to retrieve the image.
   static GlobalKey renderRepaintBoundaryKey = GlobalKey();
 
   @override
@@ -94,7 +97,7 @@ class ScreenshotMaker extends StatelessWidget {
   }
 }
 
-/// Widget for fitting your app into a device frame image.
+/// A widget for fitting your app into a device frame image.
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
@@ -130,18 +133,21 @@ class Simulated extends StatelessWidget {
     @required this.innerScreenOffset,
     @required this.child,
     Size originalScreenSize,
-  }) : originalScreenSize = originalScreenSize ?? innerScreenSize;
+    Key key,
+  })  : originalScreenSize = originalScreenSize ?? innerScreenSize,
+        super(key: key);
 
-  /// Image Widget to display the image of the device you want to combine.
+  /// An Image widget to display the image of the device you want to combine.
   final Image deviceFrameImage;
 
   /// The size of the screen in the device image.
   final Size innerScreenSize;
 
-  /// Offset from the top left corner to the screen in the device image.
+  /// The offset from the top left corner to the screen in the device image.
   final Size innerScreenOffset;
 
   /// The number of original physical pixels of the device being used as the device image.
+  /// If this is null, it will be the same as innerScreenSize.
   final Size originalScreenSize;
 
   /// Your app for combining with the device image.
