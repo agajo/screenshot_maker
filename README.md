@@ -1,14 +1,74 @@
 # screenshot_maker
 
-A Flutter package to take screenshots of various sizes.
+A package for generating images laid out using Flutter. This package allows you to use Flutter's amazing layout system to generate images. You can use it to create screenshots for the App Store and Play Store.
 
-## Getting Started
+This package provides two widgets: ScreenshotMaker and Simulated.
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+## Usage
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+### ScreenshotMaker
+
+Renders the child according to the specified size and writes it to the specified file.
+
+Passing this widget to runApp and launching it as a Flutter app with a simulator will output the image.
+The simulator you use is independent of the output size.
+In order to easily adjust the layout, I recommend using a tablet device with a large display such as an iPad.
+
+```dart
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:screenshot_maker/screenshot_maker.dart';
+
+void main() {
+  runApp(
+    ScreenshotMaker(
+      // TODO: write your absolute path.
+      outputFile: File('/Users/your_name/Desktop/simple.png'),
+      size: Size(500, 1000),
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(),
+          body: Text('text'),
+        ),
+      ),
+    ),
+  );
+}
+```
+
+### Simulated
+
+Fit your Flutter app into the device frame image you specify and compose it.
+Position and size are specified by innerScreenOffset and innerScreenSize.
+
+The device frame image must have a transparent display area.
+There are no device frame images included in this package, so you'll need to prepare them.
+There is a very simple one in example/assets, but I don't recommend using it in production.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:screenshot_maker/screenshot_maker.dart';
+
+void main() {
+  runApp(
+    Directionality(
+      textDirection: TextDirection.ltr,
+      child: Simulated(
+        innerScreenSize: Size(1658, 3588),
+        innerScreenOffset: Size(116, 103),
+        originalScreenSize: Size(1242, 2688),
+        deviceFrameImage: Image.asset('assets/example_device_frame.png'),
+        child: MyAwesomeApp(),
+      ),
+    ),
+  );
+}
+
+class MyAwesomeApp extends StatelessWidget {
+  const MyAwesomeApp();
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: Scaffold(appBar: AppBar(), body: Text('foobar')));
+  }
+}
+```
