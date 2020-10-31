@@ -49,7 +49,7 @@ class _MakeScreenshotsContinuouslyState
   @override
   Widget build(BuildContext context) {
     completer.future.then((_) {
-      if (index < widget.outputFiles.length - 1) {
+      if (index < widget.outputFiles.length - 1 && completer.isCompleted) {
         setState(() {
           ++index;
           completer = Completer();
