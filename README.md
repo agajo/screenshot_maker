@@ -2,9 +2,14 @@
 
 A package for generating images laid out using Flutter. This package allows you to use Flutter's amazing layout system to generate images. You can use it to create screenshots for the App Store and Play Store.
 
-This package provides two widgets: ScreenshotMaker and Simulated.
 
 ![out2のコピー](https://user-images.githubusercontent.com/12369062/97675378-8e6e9c00-1ad2-11eb-8504-fcbb378326c1.png)
+
+You can use Flutter Inspector and Debug Paint to debug the layout.
+
+![out2 2](https://user-images.githubusercontent.com/12369062/97772099-09918a00-1b87-11eb-922e-b9be8735be5b.png)
+
+This package provides two widgets: ScreenshotMaker and Simulated.
 
 
 ## Usage
