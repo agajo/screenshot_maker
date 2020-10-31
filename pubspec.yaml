@@ -1,7 +1,6 @@
 name: screenshot_maker
 description: A package for generating images laid out using Flutter.
 version: 0.0.1
-author: Oka Ryunoske
 homepage: https://twitter.com/agajo_tech
 
 environment:
