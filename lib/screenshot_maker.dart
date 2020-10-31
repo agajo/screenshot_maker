@@ -64,7 +64,7 @@ class ScreenshotMaker extends StatelessWidget {
       // See the following link.
       // https://api.flutter.dev/flutter/flutter_driver/FlutterDriver/screenshot.html
       await Future.delayed(Duration(seconds: 2));
-      if (completer != null && !completer.isCompleted) {
+      if (completer == null || (completer != null && !completer.isCompleted)) {
         final rrb = ScreenshotMaker.renderRepaintBoundaryKey.currentContext
             .findRenderObject() as RenderRepaintBoundary;
         final imgData = await rrb.toImage();
@@ -72,7 +72,7 @@ class ScreenshotMaker extends StatelessWidget {
 
         final pngBytes = byteData.buffer.asUint8List();
         outputFile.writeAsBytesSync(pngBytes);
-        completer.complete();
+        completer?.complete();
       }
     });
 
