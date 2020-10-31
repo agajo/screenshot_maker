@@ -46,8 +46,10 @@ void main() {
 
 ### Simulated
 
-Fit your Flutter app into the device frame image you specify and compose it.
+Fits your Flutter app into the device frame image you specify and compose it.
 Position and size are specified by innerScreenOffset and innerScreenSize.
+
+![show_inner_screen_offset 2](https://user-images.githubusercontent.com/12369062/97772442-8a9e5080-1b8a-11eb-8e38-b1963c350b33.png)
 
 The device frame image must have a transparent display area.
 There are no device frame images included in this package, so you'll need to prepare them.
