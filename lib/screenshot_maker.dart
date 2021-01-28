@@ -98,6 +98,7 @@ class ScreenshotMaker extends StatelessWidget {
 }
 
 /// A widget for fitting your app into a device frame image.
+/// If all arguments except child are set to null, the sample device frame image will be used.
 ///
 /// ```dart
 /// import 'package:flutter/material.dart';
