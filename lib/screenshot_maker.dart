@@ -128,13 +128,20 @@ class ScreenshotMaker extends StatelessWidget {
 /// ```
 class Simulated extends StatelessWidget {
   const Simulated({
-    @required this.deviceFrameImage,
-    @required this.innerScreenSize,
-    @required this.innerScreenOffset,
+    @required Widget deviceFrameImage,
+    @required Size innerScreenSize,
+    @required Size innerScreenOffset,
     @required this.child,
     Size originalScreenSize,
     Key key,
-  })  : originalScreenSize = originalScreenSize ?? innerScreenSize,
+  })  : deviceFrameImage = deviceFrameImage ??
+            const Image(
+                image: AssetImage('assets/sample_device_frame.png',
+                    package: 'screenshot_maker')),
+        innerScreenSize = innerScreenSize ?? const Size(1658, 3588),
+        innerScreenOffset = innerScreenOffset ?? const Size(116, 103),
+        originalScreenSize =
+            originalScreenSize ?? (innerScreenSize ?? const Size(1658, 3588)),
         super(key: key);
 
   /// An Image widget to display the image of the device you want to combine.
