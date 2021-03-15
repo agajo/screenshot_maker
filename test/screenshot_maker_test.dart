@@ -27,8 +27,8 @@ void main() {
         ),
         Duration(seconds: 3));
     await tester.pump(Duration(seconds: 3));
-    await expect(completer.future, completes);
-    await verify(outputFile.writeAsBytesSync(any));
+    expect(completer.future, completes);
+    verify(outputFile.writeAsBytesSync(any!));
     // Skips this test because it doesn't work.
   }, skip: true);
 }

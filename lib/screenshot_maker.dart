@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 /// A widget for generating images.
@@ -34,11 +35,11 @@ import 'package:flutter/widgets.dart';
 /// ```
 class ScreenshotMaker extends StatelessWidget {
   const ScreenshotMaker({
-    @required this.size,
-    @required this.outputFile,
-    @required this.child,
+    required this.size,
+    required this.outputFile,
+    required this.child,
     this.completer,
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   /// Size of the image to be generated.
@@ -52,23 +53,24 @@ class ScreenshotMaker extends StatelessWidget {
 
   /// A completer that is completed when the image generation is finished.
   /// By responding to this, the next image generation process can be executed.
-  final Completer<void> completer;
+  final Completer<void>? completer;
 
   /// A GlobalKey to access the RenderRepaintBoundary to retrieve the image.
   static GlobalKey renderRepaintBoundaryKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
       // Because it takes some time to rasterize, here is an artificial delay of 2 seconds.
       // See the following link.
       // https://api.flutter.dev/flutter/flutter_driver/FlutterDriver/screenshot.html
       await Future.delayed(Duration(seconds: 2));
-      if (completer == null || (completer != null && !completer.isCompleted)) {
-        final rrb = ScreenshotMaker.renderRepaintBoundaryKey.currentContext
+      if (completer == null || (completer != null && !completer!.isCompleted)) {
+        final rrb = ScreenshotMaker.renderRepaintBoundaryKey.currentContext!
             .findRenderObject() as RenderRepaintBoundary;
         final imgData = await rrb.toImage();
-        final byteData = await imgData.toByteData(format: ImageByteFormat.png);
+        final byteData = await (imgData.toByteData(format: ImageByteFormat.png)
+            as FutureOr<ByteData>);
 
         final pngBytes = byteData.buffer.asUint8List();
         outputFile.writeAsBytesSync(pngBytes);
@@ -129,14 +131,14 @@ class ScreenshotMaker extends StatelessWidget {
 /// ```
 class Simulated extends StatelessWidget {
   const Simulated({
-    @required Widget deviceFrameImage,
-    @required Size innerScreenSize,
-    @required Size innerScreenOffset,
-    @required EdgeInsets viewPadding,
-    @required this.child,
-    Size originalScreenSize,
-    Key key,
-  })  : deviceFrameImage = deviceFrameImage ??
+    required Widget deviceFrameImage,
+    required Size innerScreenSize,
+    required Size innerScreenOffset,
+    required EdgeInsets viewPadding,
+    required this.child,
+    Size? originalScreenSize,
+    Key? key,
+  })  : deviceFrameImage = deviceFrameImage as Image? ??
             const Image(
                 image: AssetImage('assets/sample_device_frame.png',
                     package: 'screenshot_maker')),
@@ -169,7 +171,7 @@ class Simulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = WidgetsBinding.instance.window.devicePixelRatio;
+    final devicePixelRatio = WidgetsBinding.instance!.window.devicePixelRatio;
     return FittedBox(
       child: Stack(children: [
         Padding(

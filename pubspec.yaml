@@ -1,12 +1,12 @@
 name: screenshot_maker
 description: A package for generating images laid out using Flutter. You can make images with Flutter's awesome layout system.
-version: 0.1.0
+version: 1.0.0
 homepage: https://twitter.com/agajo_tech
 repository: https://github.com/agajo/screenshot_maker
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0 <2.0.0"
+  sdk: '>=2.12.0 <3.0.0'
+  flutter: ">=2.0.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -15,8 +15,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.9.2
-  mockito: ^4.1.4
+  pedantic: ^1.11.0
+  mockito: ^5.0.1
 
 flutter:
   assets:
