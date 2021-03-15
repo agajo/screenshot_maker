@@ -132,6 +132,7 @@ class Simulated extends StatelessWidget {
     @required Widget deviceFrameImage,
     @required Size innerScreenSize,
     @required Size innerScreenOffset,
+    @required EdgeInsets viewPadding,
     @required this.child,
     Size originalScreenSize,
     Key key,
@@ -143,6 +144,7 @@ class Simulated extends StatelessWidget {
         innerScreenOffset = innerScreenOffset ?? const Size(116, 103),
         originalScreenSize =
             originalScreenSize ?? (innerScreenSize ?? const Size(1658, 3588)),
+        viewPadding = viewPadding ?? const EdgeInsets.only(top: 68, bottom: 66),
         super(key: key);
 
   /// An Image widget to display the image of the device you want to combine.
@@ -157,6 +159,10 @@ class Simulated extends StatelessWidget {
   /// The number of original physical pixels of the device being used as the device image.
   /// If this is null, it will be the same as innerScreenSize.
   final Size originalScreenSize;
+
+  /// The part of the display that is partially hidden by the system UI.
+  /// This allows you to represent parts of the display that are hidden by the hardware display "notch" or the system status bar.
+  final EdgeInsets viewPadding;
 
   /// Your app for combining with the device image.
   final Widget child;
@@ -188,7 +194,7 @@ class Simulated extends StatelessWidget {
             ),
           ),
         ),
-        deviceFrameImage,
+        IgnorePointer(child: deviceFrameImage),
       ]),
     );
   }
