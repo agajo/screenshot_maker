@@ -131,22 +131,25 @@ class ScreenshotMaker extends StatelessWidget {
 /// ```
 class Simulated extends StatelessWidget {
   const Simulated({
-    required Widget deviceFrameImage,
-    required Size innerScreenSize,
-    required Size innerScreenOffset,
-    required EdgeInsets viewPadding,
+    required this.deviceFrameImage,
+    required this.innerScreenSize,
+    required this.innerScreenOffset,
+    required this.viewPadding,
+    required this.originalScreenSize,
     required this.child,
-    Size? originalScreenSize,
     Key? key,
-  })  : deviceFrameImage = deviceFrameImage as Image? ??
-            const Image(
-                image: AssetImage('assets/sample_device_frame.png',
-                    package: 'screenshot_maker')),
-        innerScreenSize = innerScreenSize ?? const Size(1658, 3588),
-        innerScreenOffset = innerScreenOffset ?? const Size(116, 103),
-        originalScreenSize =
-            originalScreenSize ?? (innerScreenSize ?? const Size(1658, 3588)),
-        viewPadding = viewPadding ?? const EdgeInsets.only(top: 68, bottom: 66),
+  }) : super(key: key);
+
+  /// By using this constructor, you can use a very simple sample device frame image.
+  /// It is not recommended to use this for the actual screenshots for the store.
+  const Simulated.sample({required this.child, Key? key})
+      : deviceFrameImage = const Image(
+            image: AssetImage('assets/sample_device_frame.png',
+                package: 'screenshot_maker')),
+        innerScreenSize = const Size(1658, 3588),
+        innerScreenOffset = const Size(116, 103),
+        originalScreenSize = const Size(1658, 3588),
+        viewPadding = const EdgeInsets.only(top: 68, bottom: 66),
         super(key: key);
 
   /// An Image widget to display the image of the device you want to combine.
