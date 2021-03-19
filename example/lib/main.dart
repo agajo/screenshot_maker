@@ -22,7 +22,7 @@ class MakeScreenshotsContinuously extends StatefulWidget {
     File('/Users/your_name/Desktop/out3.png'),
   ];
   MakeScreenshotsContinuously({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -32,10 +32,10 @@ class MakeScreenshotsContinuously extends StatefulWidget {
 
 class _MakeScreenshotsContinuouslyState
     extends State<MakeScreenshotsContinuously> {
-  int index;
-  Completer<void> completer;
-  File outputFile;
-  Size size;
+  late int index;
+  late Completer<void> completer;
+  late File outputFile;
+  late Size size;
 
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _MakeScreenshotsContinuouslyState
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.purple[200], Colors.cyan[200]],
+                  colors: [Colors.purple[200]!, Colors.cyan[200]!],
                 ),
               ),
             ),
@@ -96,9 +96,11 @@ class _MakeScreenshotsContinuouslyState
                 Expanded(
                   flex: 4,
                   child: Simulated(
-                    innerScreenSize: Size(1658, 3588),
-                    innerScreenOffset: Size(116, 103),
-                    originalScreenSize: Size(1242, 2688),
+                    innerScreenSize: const Size(1658, 3588),
+                    innerScreenOffset: const Size(116, 103),
+                    originalLogicalScreenSize: const Size(414, 896),
+                    viewPadding: const PhysicalViewPadding(
+                        left: 0, top: 68, right: 0, bottom: 66),
                     deviceFrameImage:
                         Image.asset('assets/example_device_frame.png'),
                     child: MyAwesomeApp(),

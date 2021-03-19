@@ -3,11 +3,12 @@ library screenshot_maker;
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart' show TestWindow;
 
 /// A widget for generating images.
 /// When you pass a widget as a child and let it work in the simulator, it generates an image.
@@ -69,8 +70,8 @@ class ScreenshotMaker extends StatelessWidget {
         final rrb = ScreenshotMaker.renderRepaintBoundaryKey.currentContext!
             .findRenderObject() as RenderRepaintBoundary;
         final imgData = await rrb.toImage();
-        final byteData = await (imgData.toByteData(format: ImageByteFormat.png)
-            as FutureOr<ByteData>);
+        final byteData = await (imgData.toByteData(
+            format: ui.ImageByteFormat.png) as FutureOr<ByteData>);
 
         final pngBytes = byteData.buffer.asUint8List();
         outputFile.writeAsBytesSync(pngBytes);
@@ -135,21 +136,23 @@ class Simulated extends StatelessWidget {
     required this.innerScreenSize,
     required this.innerScreenOffset,
     required this.viewPadding,
-    required this.originalScreenSize,
+    required this.originalLogicalScreenSize,
+    this.locale,
     required this.child,
     Key? key,
   }) : super(key: key);
 
   /// By using this constructor, you can use a very simple sample device frame image.
   /// It is not recommended to use this for the actual screenshots for the store.
-  const Simulated.sample({required this.child, Key? key})
+  const Simulated.sample({required this.child, this.locale, Key? key})
       : deviceFrameImage = const Image(
             image: AssetImage('assets/sample_device_frame.png',
                 package: 'screenshot_maker')),
         innerScreenSize = const Size(1658, 3588),
         innerScreenOffset = const Size(116, 103),
-        originalScreenSize = const Size(1658, 3588),
-        viewPadding = const EdgeInsets.only(top: 68, bottom: 66),
+        originalLogicalScreenSize = const Size(414, 896),
+        viewPadding =
+            const PhysicalViewPadding(left: 0, top: 68, right: 0, bottom: 66),
         super(key: key);
 
   /// An Image widget to display the image of the device you want to combine.
@@ -161,20 +164,27 @@ class Simulated extends StatelessWidget {
   /// The offset from the top left corner to the screen in the device image.
   final Size innerScreenOffset;
 
-  /// The number of original physical pixels of the device being used as the device image.
-  /// If this is null, it will be the same as innerScreenSize.
-  final Size originalScreenSize;
+  /// The number of original LOGICAL pixels of the device being used as the device image.
+  final Size originalLogicalScreenSize;
 
   /// The part of the display that is partially hidden by the system UI.
   /// This allows you to represent parts of the display that are hidden by the hardware display "notch" or the system status bar.
-  final EdgeInsets viewPadding;
+  final PhysicalViewPadding viewPadding;
+
+  final Locale? locale;
 
   /// Your app for combining with the device image.
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final devicePixelRatio = WidgetsBinding.instance!.window.devicePixelRatio;
+    final testWindow = WidgetsBinding.instance!.window as TestWindow;
+    testWindow.devicePixelRatioTestValue =
+        innerScreenSize.height / originalLogicalScreenSize.height;
+    testWindow.viewPaddingTestValue = viewPadding;
+    testWindow.paddingTestValue = viewPadding;
+    testWindow.localeTestValue = locale ?? testWindow.locale;
+
     return FittedBox(
       child: Stack(children: [
         Padding(
@@ -189,10 +199,10 @@ class Simulated extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minWidth: originalScreenSize.width / devicePixelRatio,
-                  maxWidth: originalScreenSize.width / devicePixelRatio,
-                  minHeight: originalScreenSize.height / devicePixelRatio,
-                  maxHeight: originalScreenSize.height / devicePixelRatio,
+                  minWidth: originalLogicalScreenSize.width,
+                  maxWidth: originalLogicalScreenSize.width,
+                  minHeight: originalLogicalScreenSize.height,
+                  maxHeight: originalLogicalScreenSize.height,
                 ),
                 child: child,
               ),
@@ -202,5 +212,52 @@ class Simulated extends StatelessWidget {
         IgnorePointer(child: deviceFrameImage),
       ]),
     );
+  }
+}
+
+class PhysicalViewPadding implements ui.WindowPadding {
+  const PhysicalViewPadding(
+      {required this.left,
+      required this.top,
+      required this.right,
+      required this.bottom});
+  @override
+  final double left;
+  @override
+  final double top;
+  @override
+  final double right;
+  @override
+  final double bottom;
+}
+
+void runPkg(Widget app) {
+  final _binding = _WidgetsFlutterBindingWithTestWindow.ensureInitialized();
+  _binding
+    ..scheduleAttachRootWidget(app)
+    ..scheduleWarmUpFrame();
+}
+
+class _WidgetsFlutterBindingWithTestWindow extends WidgetsFlutterBinding {
+  _WidgetsFlutterBindingWithTestWindow._();
+  factory _WidgetsFlutterBindingWithTestWindow.ensureInitialized() {
+    if (WidgetsBinding.instance == null) {
+      _WidgetsFlutterBindingWithTestWindow._();
+    }
+    return WidgetsBinding.instance! as _WidgetsFlutterBindingWithTestWindow;
+  }
+
+  @override
+  void scheduleAttachRootWidget(Widget rootWidget) {
+    Timer.run(() {
+      attachRootWidget(rootWidget);
+    });
+  }
+
+  TestWindow? _customWindow;
+
+  @override
+  TestWindow get window {
+    return _customWindow ??= TestWindow(window: ui.window);
   }
 }
