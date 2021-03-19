@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -178,6 +179,10 @@ class Simulated extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!(WidgetsBinding.instance!.window is TestWindow)) {
+      throw StateError(
+          'When you use Simulated, you need to use runPkg instead of runApp.');
+    }
     final testWindow = WidgetsBinding.instance!.window as TestWindow;
     testWindow.devicePixelRatioTestValue =
         innerScreenSize.height / originalLogicalScreenSize.height;

@@ -17,8 +17,13 @@ class MyAwesomeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(title: Text("My Awesome App")),
-            body: ElevatedButton(child: Text('foobar'), onPressed: () {})));
+      home: Scaffold(
+        appBar: AppBar(title: Text("My Awesome App")),
+        body: ElevatedButton(
+          child: Text('foobar'),
+          onPressed: () {},
+        ),
+      ),
+    );
   }
 }
